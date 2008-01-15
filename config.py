@@ -30,6 +30,7 @@ GDBAR_OPTIONS = dict(fg = FG_COLOR,
                      w = 30,
                      nonl = True)
 
+ICON_PATH = '/home/fire/.xmonad/icons'
 
 DZEN2 = 'dzen2'
 GDBAR = 'gdbar'

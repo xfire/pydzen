@@ -17,6 +17,7 @@
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
+import os
 import re
 import logging
 import math
@@ -31,8 +32,8 @@ FILE_BAT_INFO = '/proc/acpi/battery/C1BE/info'
 FILE_BAT_STATE = '/proc/acpi/battery/C1BE/state'
 FILE_AC = '/proc/acpi/ac_adapter/C1BC/state'
 
-ICON_BAT = '/home/fire/.xmonad/icons/battery.xbm'
-ICON_AC = '/home/fire/.xmonad/icons/ac.xbm'
+ICON_BAT = os.path.join(config.ICON_PATH, 'battery.xbm')
+ICON_AC = os.path.join(config.ICON_PATH, 'ac.xbm')
 # ------- user config ----------------------------------------------------------
 
 RE_FULL_CAPACITY = re.compile(r'^last full capacity:\s+(?P<lastfull>\d+).*$')
