@@ -16,11 +16,11 @@ BG_COLOR_NOTICE = BG_COLOR          # notice background color
 FG_COLOR_URGENT = '#FF0000'         # urgent foreground color
 BG_COLOR_URGENT = BG_COLOR          # urgent background color
 
-DZEN2_OPTIONS = dict(fg = FG_COLOR, 
+DZEN_OPTIONS = dict(fg = FG_COLOR, 
                     bg = BG_COLOR, 
-                    ta = '1', 
-                    fn = FONT, 
-                    sa = 'r')
+                    fn = FONT,
+                    ta = 'r',
+                    l = 1)
 
 GDBAR_OPTIONS = dict(fg = FG_COLOR,
                      bg = '#37383a',
@@ -32,5 +32,5 @@ GDBAR_OPTIONS = dict(fg = FG_COLOR,
 
 ICON_PATH = '/home/fire/.xmonad/icons'
 
-DZEN2 = 'dzen2'
+DZEN = 'dzen2'
 GDBAR = 'gdbar'

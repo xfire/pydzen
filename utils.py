@@ -67,9 +67,9 @@ def execute(app, value = None, **kwargs):
     return out
 
 def gzen2(**kwargs):
-    args = config.DZEN2_OPTIONS.copy()
+    args = config.DZEN_OPTIONS.copy()
     args.update(kwargs)
-    return pipe(config.DZEN2, **args)
+    return pipe(config.DZEN, **args)
 
 def gdbar(value, **kwargs):
     args = config.GDBAR_OPTIONS.copy()

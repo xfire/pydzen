@@ -4,11 +4,30 @@
 
 import sys
 import time
+import re
+import subprocess
+
 import logging
 from logging.handlers import SysLogHandler
 
 import config
 import utils
+
+def init_logger():
+    logger = logging.getLogger()
+
+    logger.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(name)s: %(levelname)s %(message)s')
+    syslog = SysLogHandler(address = '/dev/log')
+    syslog.setFormatter(formatter)
+    logger.addHandler(syslog)
+
+    return logger
+
+def screens():
+    screens = utils.execute('xrandr')
+    return range(0, len(re.findall(" connected ", screens, re.M)))
 
 def load_plugins(pnames):
     plugins = []
@@ -24,23 +43,18 @@ def load_plugins(pnames):
     return plugins
 
 if __name__ == '__main__':
-    # init logger
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    syslog = SysLogHandler(address = '/dev/log')
-    formatter = logging.Formatter('%(name)s: %(levelname)s %(message)s')
-    syslog.setFormatter(formatter)
-    logger.addHandler(syslog)
+    init_logger()
 
     plugins = load_plugins(config.PLUGINS)
     g = utils.gzen2()
+    dzens = [utils.gzen2(xs = i + 1) for i in screens()]
     while True:
         s = []
         for p in plugins:
             s.append(p.update())
-        g.stdin.write('%s\n' % ' '.join(s))
-        # sys.stdout.write('%s\n' % ' '.join(s))
-        # sys.stdout.flush()
+        s = '%s\n' % ' '.join(s)
+        for d in dzens:
+            d.stdin.write(s)
         del s
         time.sleep(1)
 
