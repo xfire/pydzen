@@ -52,7 +52,7 @@ if __name__ == '__main__':
         s = []
         for p in plugins:
             s.append(p.update())
-        s = '%s\n' % ' '.join(s)
+        s = config.JOINTS.join(s) + '\n'
         for d in dzens:
             d.stdin.write(s)
         del s

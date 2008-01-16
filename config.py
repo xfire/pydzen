@@ -20,7 +20,8 @@ DZEN_OPTIONS = dict(fg = FG_COLOR,
                     bg = BG_COLOR, 
                     fn = FONT,
                     ta = 'r',
-                    l = 1)
+                    l = 1,
+                    x = 620)
 
 GDBAR_OPTIONS = dict(fg = FG_COLOR,
                      bg = '#37383a',
@@ -29,6 +30,8 @@ GDBAR_OPTIONS = dict(fg = FG_COLOR,
                      h = 6,
                      w = 30,
                      nonl = True)
+
+JOINTS = ' ^fg(grey60)^c(3)^fg() '
 
 ICON_PATH = '/home/fire/.xmonad/icons'
 
