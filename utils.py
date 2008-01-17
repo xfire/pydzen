@@ -66,7 +66,7 @@ def execute(app, value = None, **kwargs):
         logger.error('execute: err')
     return out
 
-def gzen2(**kwargs):
+def dzen(**kwargs):
     args = config.DZEN_OPTIONS.copy()
     args.update(kwargs)
     return pipe(config.DZEN, **args)

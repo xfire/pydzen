@@ -46,8 +46,7 @@ if __name__ == '__main__':
     init_logger()
 
     plugins = load_plugins(config.PLUGINS)
-    g = utils.gzen2()
-    dzens = [utils.gzen2(xs = i + 1) for i in screens()]
+    dzens = [utils.dzen(xs = i + 1) for i in screens()]
     while True:
         s = []
         for p in plugins:
