@@ -23,7 +23,7 @@ import logging
 import math
 
 import config
-from utils import parse_file, gdbar
+import utils
 
 logger = logging.getLogger('plugin.battery')
 
@@ -42,14 +42,14 @@ RE_PRESENT_RATE = re.compile(r'^present rate:\s+(?P<rate>\d+).*$')
 RE_AC_ONLINE = re.compile(r'^state:\s*(?P<state>on.line).*$')
 
 def update():
-    ac_vals = parse_file(FILE_AC, RE_AC_ONLINE)
-    bat_vals = parse_file([FILE_BAT_INFO, FILE_BAT_STATE], [RE_FULL_CAPACITY, RE_REMAINING_CAPACITY, RE_PRESENT_RATE])
-
     bat = '--'
     ac = ''
     fg_color = config.FG_COLOR
     icon = ICON_AC
     try:
+        ac_vals = utils.parse_file(FILE_AC, RE_AC_ONLINE)
+        bat_vals = utils.parse_file([FILE_BAT_INFO, FILE_BAT_STATE], [RE_FULL_CAPACITY, RE_REMAINING_CAPACITY, RE_PRESENT_RATE])
+
         lastfull = float(bat_vals['lastfull'][0])
         remain = float(bat_vals['remain'][0])
         rate = float(bat_vals['rate'][0])
@@ -59,7 +59,7 @@ def update():
             fg_color = config.FG_COLOR_URGENT
         elif percent < 50:
             fg_color = config.FG_COLOR_NOTICE
-        bat = gdbar('%s %s' % (remain, lastfull), fg = fg_color)
+        bat = utils.gdbar('%s %s' % (remain, lastfull))
 
         if not ac_vals and rate > 0:
             mins = (3600.0 * (remain / rate)) / 60.0
@@ -70,5 +70,5 @@ def update():
     except Exception, e:
         logger.exception(e)
 
-    return '^fg(%s)^bg(%s)^i(%s) %s%s' % (fg_color, config.BG_COLOR, icon, bat, ac)
+    return '^fg(%s)^i(%s)^p(2)%s%s^fg()' % (fg_color, icon, bat, ac)
 

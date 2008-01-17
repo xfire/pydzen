@@ -1,7 +1,9 @@
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
-PLUGINS = ('plugins.battery',
+PLUGINS = ('plugins.load',
+           'plugins.mem',
+           'plugins.battery',
            'plugins.datetime',
           )
 
@@ -20,11 +22,11 @@ DZEN_OPTIONS = dict(fg = FG_COLOR,
                     bg = BG_COLOR, 
                     fn = FONT,
                     ta = 'r',
-                    l = 1,
-                    x = 620)
+                    x = 620,
+                    e = '""')
 
 GDBAR_OPTIONS = dict(fg = FG_COLOR,
-                     bg = '#37383a',
+                     bg = '#47484A',
                      ss = 1,
                      sw = 2,
                      h = 6,

@@ -18,23 +18,19 @@
 # vim:syntax=python:sw=4:ts=4:expandtab
 
 import os
-from utils import Colors
-from config import BAR_NORMAL_COLORS
+import config
 
-
-def interval():
-    return 3
-
+# ------- user config ----------------------------------------------------------
+ICON_LOAD = os.path.join(config.ICON_PATH, 'load.xbm')
+# ------- user config ----------------------------------------------------------
 
 def update():
     lavg = os.getloadavg()
 
-    color = BAR_NORMAL_COLORS
+    fg_color = config.FG_COLOR
     if max(lavg) > 1.5:
-        # yellow text
-        color = Colors(0xFFFF00, BAR_NORMAL_COLORS.background, BAR_NORMAL_COLORS.border)
+        fg_color = config.FG_COLOR_NOTICE
     if max(lavg) > 4.0:
-        # red text
-        color = Colors(0xFF0000, BAR_NORMAL_COLORS.background, BAR_NORMAL_COLORS.border)
+        fg_color = config.FG_COLOR_URGENT
 
-    return (color, 'LOAD: %.2f %.2f %.2f' % lavg)
+    return '^fg(%s)^i(%s) %.2f %.2f %.2f^fg()' % ((fg_color, ICON_LOAD) + lavg)

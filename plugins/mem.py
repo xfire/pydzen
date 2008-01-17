@@ -17,45 +17,37 @@
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
+import os
 import re
 import logging
 
-from utils import Colors
-from utils.statusbar import execute
-from config import BAR_NORMAL_COLORS
+import utils
+import config
 
 logger = logging.getLogger('statusbar.mem')
 
 RE_MEM = re.compile('^Mem:\s*(?P<total>\d+)\s+(?P<used>\d+)\s+(?P<free>\d+)\s+(?P<shared>\d+)\s+(?P<buffers>\d+)\s+(?P<cached>\d+).*$')
 RE_SWAP = re.compile('^Swap:\s*(?P<total>\d+)\s+(?P<used>\d+)\s+(?P<free>\d+).*$')
 
-
-def interval():
-    return 4
-
-
 def update():
+    mem = ''
+    swap = ''
     try:
-        out, err = execute('free', m = True)
+        out = utils.execute('free', m = True)
         lines = out.split('\n')
 
-        mem = RE_MEM.match(lines[1])
-        swap = RE_SWAP.match(lines[3])
+        _mem = RE_MEM.match(lines[1])
+        _swap = RE_SWAP.match(lines[3])
 
-        if mem and swap:
-            mem = dict([(k, float(v)) for k, v in mem.groupdict().items()])
-            swap = dict([(k, float(v)) for k, v in swap.groupdict().items()])
+        if _mem and _swap:
+            _mem = dict([(k, float(v)) for k, v in _mem.groupdict().items()])
+            _swap = dict([(k, float(v)) for k, v in _swap.groupdict().items()])
 
-            mem_used = mem['used'] - mem['buffers'] - mem['cached']
-            mem_usage = mem_used / mem['total'] * 100.0
+            mem_used = _mem['used'] - _mem['buffers'] - _mem['cached']
+            mem = utils.gdbar('%d %d' % (mem_used, _mem['total'] ))
+            swap = utils.gdbar('%d %d' % (_swap['used'], _swap['total'] ))
 
-            swap_usage = swap['used'] / swap['total'] * 100.0
-
-            # return (BAR_NORMAL_COLORS, 'RAM: %d / %d MB (%02d%%) SWAP: %d / %d MB (%02d%%)' % \
-            #         (mem_used, mem['total'], mem_usage, swap['used'], swap['total'], swap_usage))
-            return (BAR_NORMAL_COLORS, 'RAM: %d MB (%02d%%) SWAP: %d MB (%02d%%)' % \
-                    (mem_used, mem_usage, swap['used'], swap_usage))
     except Exception, e:
         logger.exception(e)
 
-    return (BAR_NORMAL_COLORS, 'RAM: -- MB (--%%) SWAP: -- MB (--%%)')
+    return 'Mem: %s Swap: %s' % (mem, swap)
