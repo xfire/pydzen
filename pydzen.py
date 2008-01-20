@@ -42,23 +42,25 @@ if __name__ == '__main__':
 
     plugins = load_plugins(config.PLUGINS)
     dzens = [utils.dzen(xs = i + 1) for i in utils.screens()]
-    while True:
-        lines = []
-        for p in plugins:
-            values = p.update()
-            if values:
-                if not isinstance(values, (types.ListType, types.TupleType)):
-                    values = [values]
-                for i, value in enumerate(values):
-                    if len(lines) < (i + 1):
-                        lines.append([])
-                    if value:
-                        lines[i].append(value)
+    try:
+        while True:
+            lines = []
+            for p in plugins:
+                values = p.update()
+                if values:
+                    if not isinstance(values, (types.ListType, types.TupleType)):
+                        values = [values]
+                    for i, value in enumerate(values):
+                        if len(lines) < (i + 1):
+                            lines.append([])
+                        if value:
+                            lines[i].append(value)
 
-        lines = [config.JOINTS.join(l) for l in lines]
-        lines = '\n'.join(lines) + '\n'
-        for d in dzens:
-            d.stdin.write(lines)
-        del lines
-        time.sleep(1)
-
+            lines = [config.JOINTS.join(l) for l in lines]
+            lines = '\n'.join(lines) + '\n'
+            for d in dzens:
+                d.stdin.write(lines)
+            del lines
+            time.sleep(1)
+    except (KeyboardInterrupt):
+        pass

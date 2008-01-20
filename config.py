@@ -2,6 +2,7 @@
 # vim:syntax=python:sw=4:ts=4:expandtab
 
 PLUGINS = ('plugins.mpd',
+           'plugins.wlan',
            'plugins.load',
            'plugins.mem',
            'plugins.cpu',
@@ -38,7 +39,7 @@ GDBAR_OPTIONS = dict(fg = FG_COLOR,
                      w = 30,
                      nonl = True)
 
-JOINTS = ' ^fg(grey60)^c(3)^fg() '
+JOINTS = '  ^fg(grey60)^r(1x8)^fg()  '
 
 ICON_PATH = '/home/fire/.xmonad/icons'
 

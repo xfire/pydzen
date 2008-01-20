@@ -40,12 +40,12 @@ def screens():
             screens = 1
     return range(0, screens)
 
+def parse_app(args, regex_list, value = None):
+    return parse(execute(args, value).split('\n'), regex_list)
+
 def parse_file(path_list, regex_list):
     if not isinstance(path_list, (types.ListType, types.TupleType)):
         path_list = [path_list]
-
-    if not isinstance(regex_list, (types.ListType, types.TupleType)):
-        regex_list = [regex_list]
 
     lines = []
     for path in path_list:
@@ -55,6 +55,12 @@ def parse_file(path_list, regex_list):
             file.close()
         except IOError, e:
             logger.exception(e)
+
+    return parse(lines, regex_list)
+
+def parse(lines, regex_list):
+    if not isinstance(regex_list, (types.ListType, types.TupleType)):
+        regex_list = [regex_list]
 
     ret = {}
     for line in lines:
@@ -82,7 +88,7 @@ def pipe(app, **kwargs):
         if not isinstance(v, types.NoneType):
             args.extend(_to_param(k,v))
     
-    p = subprocess.Popen(args, stdout=subprocess.PIPE, stdin=subprocess.PIPE, close_fds=True)
+    p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, close_fds=True)
     return p
 
 def execute(app, value = None, **kwargs):
