@@ -20,9 +20,7 @@
 import re
 import logging
 
-from utils import Colors
-from utils.statusbar import parse_file
-from config import BAR_NORMAL_COLORS
+import utils
 
 logger = logging.getLogger('statusbar.cpu')
 
@@ -35,18 +33,15 @@ RE_TEMP = re.compile(r'^temperature:\s*(?P<temp>\d+)\s+(?P<unit>.*)$')
 OLD_STATS = dict(user = 0, system = 0, nice = 0, idle = 0)
 
 
-def interval():
-    return 2
-
-
 def update():
-    cpu_vals = parse_file('/proc/cpuinfo', RE_CPU)
-    stat_vals = parse_file('/proc/stat', RE_STATS)
-    temp_vals = parse_file(FILE_TEMP, RE_TEMP)
+    cpu_vals = utils.parse_file('/proc/cpuinfo', RE_CPU)
+    stat_vals = utils.parse_file('/proc/stat', RE_STATS)
+    temp_vals = utils.parse_file(FILE_TEMP, RE_TEMP)
 
     cpu = '--'
     try:
-        cpu = '/'.join(cpu_vals['mhz'])
+        ghz_vals = [int(i) / 1000 for i in cpu_vals['mhz']]
+        cpu = '/'.join(['%.1f' % i for i in ghz_vals])
     except Exception, e:
         logger.exception(e)
 
@@ -70,4 +65,4 @@ def update():
     except Exception, e:
         logger.exception(e)
 
-    return (BAR_NORMAL_COLORS, 'CPU: %s MHz (%s%%) [%s]' % (cpu, load, temp))
+    return 'CPU: %s GHz (%s%%) [%s]' % (cpu, load, temp)

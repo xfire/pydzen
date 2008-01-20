@@ -20,10 +20,6 @@
 import os
 import config
 
-# ------- user config ----------------------------------------------------------
-ICON_LOAD = os.path.join(config.ICON_PATH, 'load.xbm')
-# ------- user config ----------------------------------------------------------
-
 def update():
     lavg = os.getloadavg()
 
@@ -33,4 +29,4 @@ def update():
     if max(lavg) > 4.0:
         fg_color = config.FG_COLOR_URGENT
 
-    return '^fg(%s)^i(%s) %.2f %.2f %.2f^fg()' % ((fg_color, ICON_LOAD) + lavg)
+    return '^fg(%s)Load: %.2f %.2f %.2f^fg()' % ((fg_color,) + lavg)

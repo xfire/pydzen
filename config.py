@@ -1,8 +1,10 @@
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
-PLUGINS = ('plugins.load',
+PLUGINS = ('plugins.mpd',
+           'plugins.load',
            'plugins.mem',
+           'plugins.cpu',
            'plugins.battery',
            'plugins.datetime',
           )
@@ -22,8 +24,11 @@ DZEN_OPTIONS = dict(fg = FG_COLOR,
                     bg = BG_COLOR, 
                     fn = FONT,
                     ta = 'r',
+                    sa = 'r',
                     x = 620,
-                    e = '""')
+                    l = 1,
+                    u = True,
+                    e = 'button1=togglecollapse;')
 
 GDBAR_OPTIONS = dict(fg = FG_COLOR,
                      bg = '#47484A',

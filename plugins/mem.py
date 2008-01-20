@@ -50,4 +50,4 @@ def update():
     except Exception, e:
         logger.exception(e)
 
-    return 'Mem: %s Swap: %s' % (mem, swap)
+    return ['Mem: %s' % mem, 'Swap: %s' % swap]

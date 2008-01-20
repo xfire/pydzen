@@ -2,9 +2,8 @@
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
-import sys
+import types
 import time
-import re
 import subprocess
 
 import logging
@@ -25,10 +24,6 @@ def init_logger():
 
     return logger
 
-def screens():
-    screens = utils.execute('xrandr')
-    return range(0, len(re.findall(" connected ", screens, re.M)))
-
 def load_plugins(pnames):
     plugins = []
     for p in pnames:
@@ -46,14 +41,24 @@ if __name__ == '__main__':
     init_logger()
 
     plugins = load_plugins(config.PLUGINS)
-    dzens = [utils.dzen(xs = i + 1) for i in screens()]
+    dzens = [utils.dzen(xs = i + 1) for i in utils.screens()]
     while True:
-        s = []
+        lines = []
         for p in plugins:
-            s.append(p.update())
-        s = config.JOINTS.join(s) + '\n'
+            values = p.update()
+            if values:
+                if not isinstance(values, (types.ListType, types.TupleType)):
+                    values = [values]
+                for i, value in enumerate(values):
+                    if len(lines) < (i + 1):
+                        lines.append([])
+                    if value:
+                        lines[i].append(value)
+
+        lines = [config.JOINTS.join(l) for l in lines]
+        lines = '\n'.join(lines) + '\n'
         for d in dzens:
-            d.stdin.write(s)
-        del s
+            d.stdin.write(lines)
+        del lines
         time.sleep(1)
 

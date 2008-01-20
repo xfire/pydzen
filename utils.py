@@ -2,12 +2,43 @@
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
+import os
+import re
 import types
 import subprocess
 import logging
 import config
 
 logger = logging.getLogger('utils')
+
+
+def screens():
+    """
+    try to get number of xinerama screens and return a list of screen numbers.
+
+    first check XINERAMA_SCREENS environment variable, which should contain the
+    number of screens. 
+
+    if the environment variable is not set, try xrandr to get the number of
+    connected displays.
+
+    if xrandr fails, return one screen. (-> [0])
+    """
+    screens = os.environ.get('XINERAMA_SCREENS')
+    if not isinstance(screens, types.StringTypes):
+        try:
+            screens = execute('xrandr')
+            screens = len(re.findall(" connected ", screens, re.M))
+        except OSError:
+            logger.warning('can not execute xrandr')
+            screens = 1
+    else:
+        try:
+            screens = int(screens)
+        except ValueError:
+            logger.error('XINERAMA_SCREENS invalid (%s)' % screens)
+            screens = 1
+    return range(0, screens)
 
 def parse_file(path_list, regex_list):
     if not isinstance(path_list, (types.ListType, types.TupleType)):

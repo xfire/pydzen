@@ -1,32 +1,3 @@
-# python-wmii mpd status plugin v.0.1
-#
-# Description: 
-# ------------
-# Display the state of MPD in the wmii status bar. 
-# Requires the mpdlib2 library, part of pympd.
-#
-# Install:
-# -------
-# Copy this file in ~/.wmii-3.5/statusbar/
-#
-# How I use it:
-# -------------
-# I have some global bindings set up to control MPD, via mpc,
-# using xbindkeys. (could use directly the wmii keybinding system
-# but I prefer to access these functions from any window manager.
-# This small plugin allows me to have some visual feedback by 
-# showing the current playing song, if any.
-#
-# Can also be used as a stand-alone script:
-#	python 10_mpd.py | dzen2
-# (passes the output to dzen)
-#
-# Updates:
-# --------
-# 2007-11-28    simplify update() function, update songstr()
-#               to generate better output, add logger, add to 
-#               python-wmii mercurial repository
-#
 # ------------------------------------------------------------
 #
 # This program is free software; you can redistribute it and/or
@@ -50,6 +21,17 @@
 import os
 import logging
 
+import config
+import utils
+
+# ------- user config ----------------------------------------------------------
+SONG_MAX = 100
+
+ICON_STOP = os.path.join(config.ICON_PATH, 'stop.xbm')
+ICON_PLAY = os.path.join(config.ICON_PATH, 'play.xbm')
+ICON_PAUSE = os.path.join(config.ICON_PATH, 'pause.xbm')
+# ------- user config ----------------------------------------------------------
+
 has_pympd = False
 try:
     from pympd.modules import mpdlib2
@@ -57,14 +39,8 @@ try:
 except:
     pass
 
-try:
-    from config import BAR_NORMAL_COLORS
-except:
-    BAR_NORMAL_COLORS=None
- 
 logger = logging.getLogger('statusbar.mpd')
 
-SONG_MAX = 30
 mpd = None
 
 def interval():
@@ -94,10 +70,13 @@ def update():
             status = mpd.status()
 
             if status:
-                song = ''
-                if status.state in ('play', 'pause'):
-                    song = ' %s' % songstr(mpd.currentsong())
-                return (BAR_NORMAL_COLORS, 'MPD: [%s]%s' % (status.state, song))
+                song = ' %s' % songstr(mpd.currentsong())
+                icon = dict(play = ICON_PLAY, pause = ICON_PAUSE, stop = ICON_STOP).get(status.state, '')
+                progress = ''
+                if 'time' in status:
+                    progress = utils.gdbar('%s %s' % tuple(status['time'].split(':')))
+                return ['MPD: ^i(%s)%s' % (icon, progress),
+                        'MPD: [%s]%s' % (status.state, song)]
         except Exception, e:
             logger.exception(e)
             mpd = None  # try to reconnect if connection is lost
@@ -107,11 +86,4 @@ def update():
 
 
 if __name__ == "__main__":  # stand-alone mode, outside of python-wmii
-    import sys
-    import time
-
-    while True:
-        res = update()
-        if res:
-            print res[1]
-		time.sleep(interval())
+    print update()

@@ -20,4 +20,4 @@
 import time
 
 def update():
-    return '^fg()^bg()%s' % time.strftime('%Y-%m-%d - %H:%M')
+    return '^fg()^bg()%s ' % time.strftime('%Y-%m-%d - %H:%M')
