@@ -70,13 +70,15 @@ def update():
             status = mpd.status()
 
             if status:
-                song = ' %s' % songstr(mpd.currentsong())
+                song = '--'
+                if status.state != 'stop':
+                    song = ' %s' % songstr(mpd.currentsong())
                 icon = dict(play = ICON_PLAY, pause = ICON_PAUSE, stop = ICON_STOP).get(status.state, '')
                 progress = ''
                 if 'time' in status:
                     progress = utils.gdbar('%s %s' % tuple(status['time'].split(':')))
                 return ['MPD: ^i(%s)%s' % (icon, progress),
-                        'MPD: [%s]%s' % (status.state, song)]
+                        'MPD: %s' % song]
         except Exception, e:
             logger.exception(e)
             mpd = None  # try to reconnect if connection is lost

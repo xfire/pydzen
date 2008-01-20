@@ -44,10 +44,13 @@ def update():
             _swap = dict([(k, float(v)) for k, v in _swap.groupdict().items()])
 
             mem_used = _mem['used'] - _mem['buffers'] - _mem['cached']
+            swap_used = _swap['used']
             mem = utils.gdbar('%d %d' % (mem_used, _mem['total'] ))
-            swap = utils.gdbar('%d %d' % (_swap['used'], _swap['total'] ))
+            swap = utils.gdbar('%d %d' % (swap_used, _swap['total'] ))
 
+            return ['Mem: %s' % mem, 
+                    'Mem: %s (%d Mb) Swap: %s (%d Mb)' % (mem, mem_used, swap, swap_used)]
     except Exception, e:
         logger.exception(e)
 
-    return ['Mem: %s' % mem, 'Swap: %s' % swap]
+    return None
