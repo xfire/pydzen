@@ -42,12 +42,15 @@ except:
     OLD_STATS = (0, 0)
 
 def update():
+    global OLD_STATS
     try:
-        rx = int(utils.parse_file(RX_STAT, RE_RXTX_STAT)['val'][0])
-        tx = int(utils.parse_file(TX_STAT, RE_RXTX_STAT)['val'][0])
+        nrx = int(utils.parse_file(RX_STAT, RE_RXTX_STAT)['val'][0])
+        ntx = int(utils.parse_file(TX_STAT, RE_RXTX_STAT)['val'][0])
 
-        rx = (rx - OLD_STATS[0]) / 1024 / INTERVAL
-        tx = (tx - OLD_STATS[1]) / 1024 / INTERVAL
+        rx = (nrx - OLD_STATS[0]) / 1024 / INTERVAL
+        tx = (ntx - OLD_STATS[1]) / 1024 / INTERVAL
+
+        OLD_STATS = (nrx, ntx)
 
         # lq = utils.parse_app('/sbin/iwconfig', re.compile(r'^.*Link Quality.(?P<val>(\d+))\/(?P<max>(\d+)).*$', re.M))
         # lqbar = utils.gdbar('%s %s' % (lq['val'][0], lq['max'][0]), sw = 1, ss = 1, w = 15 ) 
