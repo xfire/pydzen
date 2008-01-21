@@ -7,6 +7,8 @@ import re
 import types
 import subprocess
 import logging
+import time
+
 import config
 
 logger = logging.getLogger('utils')
@@ -112,4 +114,17 @@ def gdbar(value, **kwargs):
     args = config.GDBAR_OPTIONS.copy()
     args.update(kwargs)
     return execute(config.GDBAR, value, **args)
+
+
+def cache(timeout):
+    def wrapper(f, cache={}):
+        def nfunc():
+            key = f
+            if key not in cache:
+                cache[key] = [f(), time.time()]
+            elif (time.time() - cache[key][1]) >= timeout:
+                cache[key] = [f(), time.time()]
+            return cache[key][0]
+        return nfunc
+    return wrapper
 

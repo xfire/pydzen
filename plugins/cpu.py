@@ -17,10 +17,16 @@
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
+import os
 import re
 import logging
 
+import config
 import utils
+
+# ------- user config ----------------------------------------------------------
+ICON_TEMP = os.path.join(config.ICON_PATH, 'temp.xbm')
+# ------- user config ----------------------------------------------------------
 
 logger = logging.getLogger('statusbar.cpu')
 
@@ -61,8 +67,8 @@ def update():
 
     temp = '--'
     try:
-        temp = '%02d %s' % (int(temp_vals['temp'][0]), temp_vals['unit'][0])
+        temp = '^i(%s)%02d%s' % (ICON_TEMP, int(temp_vals['temp'][0]), temp_vals['unit'][0])
     except Exception, e:
         logger.exception(e)
 
-    return 'CPU: %s GHz (%s%%) [%s]' % (cpu, load, temp)
+    return 'CPU: %s GHz (%s%%)%s' % (cpu, load, temp)

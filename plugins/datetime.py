@@ -19,5 +19,8 @@
 
 import time
 
+import utils
+
+@utils.cache(5)
 def update():
     return '^fg()^bg()%s ' % time.strftime('%Y-%m-%d - %H:%M')

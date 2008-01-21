@@ -29,6 +29,7 @@ logger = logging.getLogger('statusbar.mem')
 RE_MEM = re.compile('^Mem:\s*(?P<total>\d+)\s+(?P<used>\d+)\s+(?P<free>\d+)\s+(?P<shared>\d+)\s+(?P<buffers>\d+)\s+(?P<cached>\d+).*$')
 RE_SWAP = re.compile('^Swap:\s*(?P<total>\d+)\s+(?P<used>\d+)\s+(?P<free>\d+).*$')
 
+@utils.cache(2)
 def update():
     mem = ''
     swap = ''
