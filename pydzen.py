@@ -15,11 +15,12 @@ import utils
 def init_logger():
     logger = logging.getLogger()
 
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.ERROR)
 
     formatter = logging.Formatter('%(name)s: %(levelname)s %(message)s')
     syslog = SysLogHandler(address = '/dev/log')
     syslog.setFormatter(formatter)
+    syslog.setLevel(logging.ERROR)
     logger.addHandler(syslog)
 
     return logger
