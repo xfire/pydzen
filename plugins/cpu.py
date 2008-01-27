@@ -40,20 +40,14 @@ OLD_STATS = dict(user = 0, system = 0, nice = 0, idle = 0)
 
 
 def update():
-    cpu_vals = utils.parse_file('/proc/cpuinfo', RE_CPU)
-    stat_vals = utils.parse_file('/proc/stat', RE_STATS)
-    temp_vals = utils.parse_file(FILE_TEMP, RE_TEMP)
-
-    cpu = '--'
     try:
+        cpu_vals = utils.parse_file('/proc/cpuinfo', RE_CPU)
+        stat_vals = utils.parse_file('/proc/stat', RE_STATS)
+        temp_vals = utils.parse_file(FILE_TEMP, RE_TEMP)
+
         ghz_vals = [int(i) / 1000 for i in cpu_vals['mhz']]
         cpu = '/'.join(['%.1f' % i for i in ghz_vals])
-    except Exception, e:
-        logger.exception(e)
 
-    load = '--'
-    try:
-        # convert values to int's
         stat_vals = dict([(k, int(v[0])) for k, v in stat_vals.items()])
         dtotal = stat_vals['user'] - OLD_STATS['user'] + \
                  stat_vals['system'] - OLD_STATS['system'] + \
@@ -61,14 +55,18 @@ def update():
                  stat_vals['idle'] - OLD_STATS['idle']
         if dtotal > 0:
             load = '%02d' % (100 - ((stat_vals['idle'] - OLD_STATS['idle']) * 100 / dtotal))
+        else:
+            load = '0'
         OLD_STATS.update(stat_vals)
-    except Exception, e:
-        logger.exception(e)
 
-    temp = '--'
-    try:
-        temp = '^i(%s)%02d%s' % (ICON_TEMP, int(temp_vals['temp'][0]), temp_vals['unit'][0])
-    except Exception, e:
-        logger.exception(e)
+        temp = ''
+        try:
+            temp = '^i(%s)%02d%s' % (ICON_TEMP, int(temp_vals['temp'][0]), temp_vals['unit'][0])
+        except Exception:
+            pass
 
-    return 'CPU: %s GHz (%s%%)%s' % (cpu, load, temp)
+        return 'CPU: %s GHz (%s%%)%s' % (cpu, load, temp)
+    except Exception, e:
+        logger.warn(e)
+
+    return None

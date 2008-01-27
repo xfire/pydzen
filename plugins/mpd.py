@@ -80,8 +80,8 @@ def update():
                 return ['MPD: ^i(%s)%s' % (icon, progress),
                         'MPD: %s' % song]
         except Exception, e:
-            logger.exception(e)
             mpd = None  # try to reconnect if connection is lost
+            logger.warn(e)
 
     return None
 

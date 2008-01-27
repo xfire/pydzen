@@ -43,11 +43,10 @@ RE_AC_ONLINE = re.compile(r'^state:\s*(?P<state>on.line).*$')
 
 @utils.cache(2)
 def update():
-    bat = '--'
-    ac = ''
-    fg_color = config.FG_COLOR
-    icon = ICON_AC
     try:
+        fg_color = config.FG_COLOR
+        icon = ICON_AC
+
         ac_vals = utils.parse_file(FILE_AC, RE_AC_ONLINE)
         bat_vals = utils.parse_file([FILE_BAT_INFO, FILE_BAT_STATE], [RE_FULL_CAPACITY, RE_REMAINING_CAPACITY, RE_PRESENT_RATE])
 
@@ -62,14 +61,16 @@ def update():
             fg_color = config.FG_COLOR_NOTICE
         bat = utils.gdbar('%s %s' % (remain, lastfull))
 
+        ac = ''
         if not ac_vals and rate > 0:
             mins = (3600.0 * (remain / rate)) / 60.0
             hours = math.floor(mins / 60.0)
             mins = math.floor(mins - (hours * 60.0))
             ac = ' %02d:%02d' % (hours, mins)
             icon = ICON_BAT
+
+        return '^fg(%s)^i(%s)%s%s^fg()' % (fg_color, icon, bat, ac)
     except Exception, e:
-        logger.exception(e)
+        logger.warn(e)
 
-    return '^fg(%s)^i(%s)%s%s^fg()' % (fg_color, icon, bat, ac)
-
+    return None

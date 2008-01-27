@@ -31,8 +31,6 @@ RE_SWAP = re.compile('^Swap:\s*(?P<total>\d+)\s+(?P<used>\d+)\s+(?P<free>\d+).*$
 
 @utils.cache(2)
 def update():
-    mem = ''
-    swap = ''
     try:
         out = utils.execute('free', m = True)
         lines = out.split('\n')
@@ -46,12 +44,13 @@ def update():
 
             mem_used = _mem['used'] - _mem['buffers'] - _mem['cached']
             swap_used = _swap['used']
+
             mem = utils.gdbar('%d %d' % (mem_used, _mem['total'] ))
             swap = utils.gdbar('%d %d' % (swap_used, _swap['total'] ))
 
             return ['Mem: %s' % mem, 
                     'Mem: %s (%d Mb) Swap: %s (%d Mb)' % (mem, mem_used, swap, swap_used)]
     except Exception, e:
-        logger.exception(e)
+        logger.warn(e)
 
     return None

@@ -57,6 +57,6 @@ def update():
 
         return '%s: %dkB/s^i(%s) %dkB/s^i(%s)' % (IFACE, rx, ICON_DOWN, tx, ICON_UP)
     except Exception, e:
-        logger.exception(e)
+        logger.warn(e)
 
     return None
