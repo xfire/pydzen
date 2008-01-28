@@ -22,8 +22,7 @@ import re
 import logging
 import math
 
-import config
-import utils
+from pydzen import config, utils
 
 logger = logging.getLogger('plugin.battery')
 

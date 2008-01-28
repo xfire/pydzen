@@ -21,8 +21,7 @@ import os
 import re
 import logging
 
-import utils
-import config
+from pydzen import utils
 
 logger = logging.getLogger('statusbar.mem')
 

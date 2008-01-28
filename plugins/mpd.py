@@ -21,8 +21,7 @@
 import os
 import logging
 
-import config
-import utils
+from pydzen import config, utils
 
 # ------- user config ----------------------------------------------------------
 SONG_MAX = 100
@@ -42,9 +41,6 @@ except:
 logger = logging.getLogger('statusbar.mpd')
 
 mpd = None
-
-def interval():
-    return 3
 
 def songstr(song):
     s = ''

@@ -19,7 +19,7 @@
 
 import time
 
-import utils
+from pydzen import utils
 
 @utils.cache(5)
 def update():

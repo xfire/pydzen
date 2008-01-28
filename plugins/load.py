@@ -18,7 +18,8 @@
 # vim:syntax=python:sw=4:ts=4:expandtab
 
 import os
-import config
+
+from pydzen import config
 
 def update():
     lavg = os.getloadavg()
