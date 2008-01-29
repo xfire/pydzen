@@ -10,14 +10,17 @@ import time
 import subprocess
 import logging
 from logging.handlers import SysLogHandler
+from optparse import OptionParser
 
 class utils(object):
     @staticmethod
-    def screens():
+    def screens(screens = 0):
         """
         try to get number of xinerama screens and return a list of screen numbers.
 
-        first check XINERAMA_SCREENS environment variable, which should contain the
+        first check if parameter value is > 0, if so, use it.
+
+        second check XINERAMA_SCREENS environment variable, which should contain the
         number of screens. 
 
         if the environment variable is not set, try xrandr to get the number of
@@ -25,19 +28,20 @@ class utils(object):
 
         if xrandr fails, return one screen. (-> [0])
         """
-        screens = os.environ.get('XINERAMA_SCREENS')
-        if not isinstance(screens, types.StringTypes):
-            try:
-                screens = execute('xrandr')
-                screens = len(re.findall(" connected ", screens, re.M))
-            except OSError:
-                logger.warning('can not execute xrandr')
-                screens = 1
-        else:
+        if screens <= 0:
+            screens = os.environ.get('XINERAMA_SCREENS')
+        if isinstance(screens, types.StringTypes):
             try:
                 screens = int(screens)
             except ValueError:
                 logger.error('XINERAMA_SCREENS invalid (%s)' % screens)
+                screens = 0
+        if not screens:
+            try:
+                screens = utils.execute('xrandr')
+                screens = len(re.findall(" connected ", screens, re.M))
+            except OSError:
+                logger.warning('can not execute xrandr')
                 screens = 1
         return range(0, screens)
 
@@ -147,25 +151,6 @@ def load_plugins(pnames):
             logger.error('error loading "%s": %s' % (p, e))
     return plugins
 
-DEFAULT_CONFIG = dict(PLUGINS = [], 
-                      LOGLEVEL = logging.ERROR)
-def read_config(file):
-    config = DEFAULT_CONFIG.copy()
-    try:
-        execfile(file, {}, config)
-    except Exception, e:
-        print 'Invalid configuration file: %s' % e
-        sys.exit(1)
-    class _ConfigWrapper(dict):
-        def __init__(self, *args, **kwargs):
-            super(_ConfigWrapper, self).__init__(*args, **kwargs)
-        def __getattr__(self, name):
-            return self[name]
-        def __setattr__(self, name, value):
-            self[name] = value
-            return self[name]
-    return _ConfigWrapper(config)
-
 def init_logger(loglevel):
     logger = logging.getLogger()
 
@@ -179,13 +164,46 @@ def init_logger(loglevel):
 
     return logger
 
-config = read_config('/home/fire/work/src/pydzen.simplify/pydzenrc')
+def read_config_file(file, **defaults):
+    config = defaults.copy()
+    try:
+        execfile(os.path.expanduser(file), {}, config)
+    except Exception, e:
+        print 'Invalid configuration file: %s' % e
+        sys.exit(1)
+    class _ConfigWrapper(dict):
+        def __init__(self, *args, **kwargs):
+            super(_ConfigWrapper, self).__init__(*args, **kwargs)
+        def __getattr__(self, name):
+            return self[name]
+        def __setattr__(self, name, value):
+            self[name] = value
+            return self[name]
+    return _ConfigWrapper(config)
+
+def configure():
+    parser = OptionParser()
+    parser.add_option('-c', '--config', dest = 'CONFIG_FILE',
+                      help = 'specify an alternate pydzenrc file')
+    parser.add_option('-s', '--screens', dest = 'SCREENS', type = 'int',
+                      help = 'number of Xinerama screen')
+    parser.set_defaults(CONFIG_FILE = '~/.pydzen/pydzenrc',
+                        SCREENS = 0)
+
+    (options, args) = parser.parse_args()
+    config = read_config_file(options.CONFIG_FILE,
+                              PLUGINS = [],
+                              LOGLEVEL = logging.ERROR,
+                              SCREENS = options.SCREENS)
+    return config
+
+config = configure()
 
 if __name__ == '__main__':
     logger = init_logger(config.LOGLEVEL)
     plugins = load_plugins(config.PLUGINS)
 
-    dzens = [utils.dzen(xs = i + 1) for i in utils.screens()]
+    dzens = [utils.dzen(xs = i + 1) for i in utils.screens(config.SCREENS)]
     try:
         while True:
             lines = []
