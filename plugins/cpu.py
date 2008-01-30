@@ -45,7 +45,7 @@ def update():
         stat_vals = utils.parse_file('/proc/stat', RE_STATS)
         temp_vals = utils.parse_file(FILE_TEMP, RE_TEMP)
 
-        ghz_vals = [int(i) / 1000 for i in cpu_vals['mhz']]
+        ghz_vals = [float(i) / 1000 for i in cpu_vals['mhz']]
         cpu = '/'.join(['%.1f' % i for i in ghz_vals])
 
         stat_vals = dict([(k, int(v[0])) for k, v in stat_vals.items()])
