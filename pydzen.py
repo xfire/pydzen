@@ -9,7 +9,6 @@ import types
 import time
 import subprocess
 import logging
-from logging.handlers import SysLogHandler
 from optparse import OptionParser
 
 class utils(object):
@@ -138,31 +137,24 @@ class utils(object):
             return nfunc
         return wrapper
 
-def load_plugins(pnames):
+def load_plugins():
+    sys.path.insert(0, os.path.expanduser(config.PLUGIN_DIR))
     plugins = []
-    for p in pnames:
+    for p in config.PLUGINS:
         try:
             plugin = __import__(p, {}, {}, '*')
             if hasattr(plugin, 'update'):
                 plugins.append(plugin)
             else:
-                logger.warning()
+                logger.warning('invalid plugin "%s": no update() function specified' % p)
         except ImportError, e:
-            logger.error('error loading "%s": %s' % (p, e))
+            logger.error('error loading plugin "%s": %s' % (p, e))
+    sys.path = sys.path[1:]
     return plugins
 
-def init_logger(loglevel):
-    logger = logging.getLogger()
-
-    logger.setLevel(loglevel)
-
-    formatter = logging.Formatter('%(name)s: %(levelname)s %(message)s')
-    syslog = SysLogHandler(address = '/dev/log')
-    syslog.setFormatter(formatter)
-    syslog.setLevel(loglevel)
-    logger.addHandler(syslog)
-
-    return logger
+def init_logger():
+    logging.basicConfig(level = config.LOGLEVEL,
+                        format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 
 def read_config_file(file, **defaults):
     config = defaults.copy()
@@ -185,23 +177,29 @@ def configure():
     parser = OptionParser()
     parser.add_option('-c', '--config', dest = 'CONFIG_FILE',
                       help = 'specify an alternate pydzenrc file')
+    parser.add_option('-p', '--plugins', dest = 'PLUGIN_DIR',
+                      help = 'specify an alternate plugin directory')
     parser.add_option('-s', '--screens', dest = 'SCREENS', type = 'int',
                       help = 'number of Xinerama screen')
     parser.set_defaults(CONFIG_FILE = '~/.pydzen/pydzenrc',
+                        PLUGIN_DIR = '~/.pydzen/plugins',
                         SCREENS = 0)
 
     (options, args) = parser.parse_args()
     config = read_config_file(options.CONFIG_FILE,
                               PLUGINS = [],
                               LOGLEVEL = logging.ERROR,
-                              SCREENS = options.SCREENS)
+                              SCREENS = options.SCREENS,
+                              PLUGIN_DIR = options.PLUGIN_DIR)
     return config
 
 config = configure()
 
 if __name__ == '__main__':
-    logger = init_logger(config.LOGLEVEL)
-    plugins = load_plugins(config.PLUGINS)
+    init_logger()
+    logger = logging.getLogger('pydzen')
+
+    plugins = load_plugins()
 
     dzens = [utils.dzen(xs = i + 1) for i in utils.screens(config.SCREENS)]
     try:
