@@ -46,6 +46,7 @@ class utils(object):
         logger = logging.getLogger('utils')
 
         if screens <= 0:
+            logger.debug('try to read environment variable "XINERAMA_SCREENS"')
             screens = os.environ.get('XINERAMA_SCREENS')
         if isinstance(screens, types.StringTypes):
             try:
@@ -55,20 +56,24 @@ class utils(object):
                 screens = 0
         if not screens:
             try:
+                logger.debug('try to use xrandr to determine number of connected screens')
                 screens = utils.execute('xrandr')
                 screens = len(re.findall(" connected ", screens, re.M))
             except OSError:
                 logger.warning('can not execute xrandr')
                 screens = 1
+        logger.debug('found %d screens' % screens)
         return range(0, screens)
 
     @staticmethod
     def parse_app(args, regex_list, value = None):
+        logging.getLogger('utils').debug('parse_app(%s, %s, %s)' % (args, regex_list, value))
         return utils.parse(execute(args, value).split('\n'), regex_list)
 
     @staticmethod
     def parse_file(path_list, regex_list):
         logger = logging.getLogger('utils')
+        logger.debug('parse_file(%s, %s)' % (path_list, regex_list))
 
         if not isinstance(path_list, (types.ListType, types.TupleType)):
             path_list = [path_list]
@@ -138,7 +143,7 @@ class utils(object):
         else:
             out, err = p.communicate()
         if err:
-            logger.error('execute: err')
+            logger.error('execute: error: %s' % err)
         return out
 
     @staticmethod
@@ -175,6 +180,7 @@ def load_plugins():
         try:
             plugin = __import__(p, {}, {}, '*')
             if hasattr(plugin, 'update'):
+                logger.debug('load plugin: "%s"' % p)
                 plugins.append(plugin)
             else:
                 logger.warning('invalid plugin "%s": no update() function specified' % p)
@@ -185,7 +191,7 @@ def load_plugins():
 
 def init_logger():
     logging.basicConfig(level = config.LOGLEVEL,
-                        format = '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+                        format = '%(asctime)s %(name)-8s %(levelname)-6s %(message)s')
 
 def read_config_file(file, **defaults):
     config = defaults.copy()
