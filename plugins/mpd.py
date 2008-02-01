@@ -1,4 +1,5 @@
-# ------------------------------------------------------------
+#
+# Copyright (C) 2007 Rico Schiekel (fire at downgra dot de)
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,8 +15,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# Copyright (C) 2007 Brescan Florin ( ratzunu at gmail ... )
-
 # vim:syntax=python:sw=4:ts=4:expandtab
 
 import os

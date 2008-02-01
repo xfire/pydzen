@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007 Rico Schiekel (fire at downgra dot de)
+# Copyright (C) 2008 Rico Schiekel (fire at downgra dot de)
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
