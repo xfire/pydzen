@@ -1,13 +1,13 @@
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
-PLUGINS = ('mpd',
-           'wlan',
-           'load',
-           'mem',
-           'cpu',
-           'battery',
-           'datetime',
+PLUGINS = ('plugins.mpd',
+           'plugins.wlan',
+           'plugins.load',
+           'plugins.mem',
+           'plugins.cpu',
+           'plugins.battery',
+           'plugins.datetime',
           )
 
 FONT = '-artwiz-snap-*-*-*-*-*-100-*-*-*-*-*-*'

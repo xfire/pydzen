@@ -197,7 +197,7 @@ def configure():
     parser.add_option('-s', '--screens', dest = 'SCREENS', type = 'int',
                       help = 'number of Xinerama screen')
     parser.set_defaults(CONFIG_FILE = '~/.pydzen/pydzenrc',
-                        PLUGIN_DIR = '~/.pydzen/plugins',
+                        PLUGIN_DIR = '~/.pydzen',
                         SCREENS = 0)
 
     (options, args) = parser.parse_args()
