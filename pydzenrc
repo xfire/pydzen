@@ -1,6 +1,8 @@
+# pydzen - configuration file
 #
 # vim:syntax=python:sw=4:ts=4:expandtab
 
+# use these plugins, first is the left most
 PLUGINS = ('plugins.mpd',
            'plugins.wlan',
            'plugins.load',
@@ -21,6 +23,7 @@ BG_COLOR_NOTICE = BG_COLOR          # notice background color
 FG_COLOR_URGENT = '#FF0000'         # urgent foreground color
 BG_COLOR_URGENT = BG_COLOR          # urgent background color
 
+# options for dzen (key's are taken as parameter name)
 DZEN_OPTIONS = dict(fg = FG_COLOR, 
                     bg = BG_COLOR, 
                     fn = FONT,
@@ -31,6 +34,7 @@ DZEN_OPTIONS = dict(fg = FG_COLOR,
                     u = True,
                     e = 'button1=togglecollapse;')
 
+# options for gdbar (key's are taken as parameter name)
 GDBAR_OPTIONS = dict(fg = FG_COLOR,
                      bg = '#47484A',
                      ss = 1,
@@ -39,12 +43,15 @@ GDBAR_OPTIONS = dict(fg = FG_COLOR,
                      w = 30,
                      nonl = True)
 
+# plugin output separator
 JOINTS = '  ^fg(grey60)^r(1x8)^fg()  '
 
 ICON_PATH = '/home/fire/.xmonad/icons'
 
+# path to dzen and gdbar executables
 DZEN = 'dzen2'
 GDBAR = 'gdbar'
 
+# set default log level
 import logging
 LOGLEVEL = logging.WARN
