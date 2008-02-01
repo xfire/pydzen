@@ -253,6 +253,8 @@ if __name__ == '__main__':
                 d.stdin.write(lines)
             del lines
             time.sleep(1)
-    except (KeyboardInterrupt):
+    except StandardError, e:
+        logger.error(e)
+    except KeyboardInterrupt:
         pass
 
