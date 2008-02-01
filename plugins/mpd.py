@@ -31,14 +31,14 @@ ICON_PLAY = os.path.join(config.ICON_PATH, 'play.xbm')
 ICON_PAUSE = os.path.join(config.ICON_PATH, 'pause.xbm')
 # ------- user config ----------------------------------------------------------
 
+logger = logging.getLogger('plugin.mpd')
+
 has_pympd = False
 try:
     from pympd.modules import mpdlib2
     has_pympd = True
 except:
-    pass
-
-logger = logging.getLogger('statusbar.mpd')
+    logger.warn('no pympd module installed')
 
 mpd = None
 
@@ -75,13 +75,9 @@ def update():
                     progress = utils.gdbar('%s %s' % tuple(status['time'].split(':')))
                 return ['MPD: ^i(%s)%s' % (icon, progress),
                         'MPD: %s' % song]
-        except Exception, e:
+        except StandardError, e:
             mpd = None  # try to reconnect if connection is lost
             logger.warn(e)
 
     return None
 
-
-
-if __name__ == "__main__":  # stand-alone mode, outside of python-wmii
-    print update()

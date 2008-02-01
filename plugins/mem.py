@@ -23,7 +23,7 @@ import logging
 
 from pydzen import utils
 
-logger = logging.getLogger('statusbar.mem')
+logger = logging.getLogger('plugin.mem')
 
 RE_MEM = re.compile('^Mem:\s*(?P<total>\d+)\s+(?P<used>\d+)\s+(?P<free>\d+)\s+(?P<shared>\d+)\s+(?P<buffers>\d+)\s+(?P<cached>\d+).*$')
 RE_SWAP = re.compile('^Swap:\s*(?P<total>\d+)\s+(?P<used>\d+)\s+(?P<free>\d+).*$')
@@ -49,7 +49,7 @@ def update():
 
             return ['Mem: %s' % mem, 
                     'Mem: %s (%d Mb) Swap: %s (%d Mb)' % (mem, mem_used, swap, swap_used)]
-    except Exception, e:
+    except StandardError, e:
         logger.warn(e)
 
     return None

@@ -69,7 +69,7 @@ def update():
             icon = ICON_BAT
 
         return '^fg(%s)^i(%s)%s%s^fg()' % (fg_color, icon, bat, ac)
-    except Exception, e:
+    except StandardError, e:
         logger.warn(e)
 
     return None

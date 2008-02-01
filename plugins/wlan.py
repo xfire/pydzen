@@ -27,7 +27,7 @@ ICON_UP = os.path.join(config.ICON_PATH, 'net_up.xbm')
 ICON_DOWN = os.path.join(config.ICON_PATH, 'net_down.xbm')
 # ------- user config ----------------------------------------------------------
 
-logger = logging.getLogger('statusbar.wlan')
+logger = logging.getLogger('plugin.wlan')
 
 RX_STAT = '/sys/class/net/%s/statistics/rx_bytes' % IFACE
 TX_STAT = '/sys/class/net/%s/statistics/tx_bytes' % IFACE
@@ -55,7 +55,7 @@ def update():
         # lqbar = utils.gdbar('%s %s' % (lq['val'][0], lq['max'][0]), sw = 1, ss = 1, w = 15 ) 
 
         return '%s: %dkB/s^i(%s) %dkB/s^i(%s)' % (IFACE, rx, ICON_DOWN, tx, ICON_UP)
-    except Exception, e:
+    except StandardError, e:
         logger.warn(e)
 
     return None

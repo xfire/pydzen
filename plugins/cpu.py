@@ -27,7 +27,7 @@ from pydzen import config, utils
 ICON_TEMP = os.path.join(config.ICON_PATH, 'temp.xbm')
 # ------- user config ----------------------------------------------------------
 
-logger = logging.getLogger('statusbar.cpu')
+logger = logging.getLogger('plugin.cpu')
 
 FILE_TEMP = '/proc/acpi/thermal_zone/TZ4/temperature'
 
@@ -61,11 +61,11 @@ def update():
         temp = ''
         try:
             temp = '^i(%s)%02d%s' % (ICON_TEMP, int(temp_vals['temp'][0]), temp_vals['unit'][0])
-        except Exception:
+        except StandardError:
             pass
 
         return 'CPU: %s GHz (%s%%)%s' % (cpu, load, temp)
-    except Exception, e:
+    except StandardError, e:
         logger.warn(e)
 
     return None
