@@ -1,0 +1,80 @@
+================================================
+ pydzen (c)2008 Rico Schiekel (fire@downgra.de)
+================================================
+
+Overview
+========
+pydzen is a wrapper script around dzen, written in python, to easily create 
+nice looking statusbars.
+
+
+Installation
+============
+Copy the file 'pydzen.py' to a suitable directory like '/usr/local/bin/'
+or '~/bin/'.
+
+Next create a '.pydzen/' directory in your home and copy the file 'pydzenrc'
+and the 'plugin/' directory into it.
+
+Finally customize your 'pydzenrc' and the plugins like mentioned in the next
+paragraph.
+
+
+Configuration
+=============
+The 'pydzenrc' file contains all settings how your statusbar will look like.
+Most of these settings are self-explanatory.
+
+You can define new settings to use them in plugins by simply defining them
+here.
+
+Some of the plugins also need some tweaking, e.g. special paths or so.
+This is done in the plugin files, 'cause I'm to lazy. So look for 'user config'
+sections...
+
+
+New Plugins
+===========
+A new plugin is simply a python file, which at least must define an update()
+function.
+This function must return correct dzen2 in-text formating strings, or None if
+nothing should be displayed.
+
+Plugins can import 'utils' and 'config' from the pydzen package to use the
+current configuration and nice helper functions.
+
+Take a look at the existing plugins to see this in use.
+
+
+Bug Reports
+===========
+Send your bug reports and feature requests to <pydzen@downgra.de>.
+
+
+Patches
+=======
+If you do not have the repository yet download it via:
+    > hg clone http://downgra.de/hg/pydzen
+
+If you already have the repository please make sure you are using 
+the current version:
+    > hg pull
+    > hg update
+or
+    > hg fetch
+
+Now apply your changes (with the editor of you choice). Then commit your 
+changes local via running:
+    > hg commit -m "short description regarding your changes"
+
+Finally send the patch via mercurials patchbomb extension, 
+    > hg email -o -t pydzen@downgra.de
+or export your changes manualy (replace tip with -r?:? if needed):
+    > hg export tip | mail -s "short description" pydzen@downgra.de
+
+
+License
+=======
+This program is under the terms of GPL (GNU General Public License).
+see COPYING file.
+
