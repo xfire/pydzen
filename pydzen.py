@@ -27,6 +27,8 @@ class utils(object):
 
         if xrandr fails, return one screen. (-> [0])
         """
+        logger = logging.getLogger('utils')
+
         if screens <= 0:
             screens = os.environ.get('XINERAMA_SCREENS')
         if isinstance(screens, types.StringTypes):
@@ -50,6 +52,8 @@ class utils(object):
 
     @staticmethod
     def parse_file(path_list, regex_list):
+        logger = logging.getLogger('utils')
+
         if not isinstance(path_list, (types.ListType, types.TupleType)):
             path_list = [path_list]
 
@@ -86,6 +90,8 @@ class utils(object):
 
     @staticmethod
     def pipe(app, **kwargs):
+        logger = logging.getLogger('utils')
+
         def _to_param(k, v):
             if isinstance(v, types.BooleanType):
                 return ['-%s' % k]
@@ -96,11 +102,18 @@ class utils(object):
             if not isinstance(v, types.NoneType):
                 args.extend(_to_param(k,v))
         
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, close_fds=True)
+        try:
+            logger.debug('utils.pipe(%s)' % str(args))
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, close_fds=True)
+        except OSError, e:
+            logger.error('can not execute "%s": %s' % (app, e))
+            sys.exit(1)
         return p
 
     @staticmethod
     def execute(app, value = None, **kwargs):
+        logger = logging.getLogger('utils')
+
         if not value: value = ''
 
         p = utils.pipe(app, **kwargs)
@@ -138,6 +151,8 @@ class utils(object):
         return wrapper
 
 def load_plugins():
+    logger = logging.getLogger('pydzen')
+
     sys.path.insert(0, os.path.expanduser(config.PLUGIN_DIR))
     plugins = []
     for p in config.PLUGINS:
@@ -160,7 +175,7 @@ def read_config_file(file, **defaults):
     config = defaults.copy()
     try:
         execfile(os.path.expanduser(file), {}, config)
-    except Exception, e:
+    except StandardError, e:
         print 'Invalid configuration file: %s' % e
         sys.exit(1)
     class _ConfigWrapper(dict):
@@ -188,7 +203,7 @@ def configure():
     (options, args) = parser.parse_args()
     config = read_config_file(options.CONFIG_FILE,
                               PLUGINS = [],
-                              LOGLEVEL = logging.ERROR,
+                              LOGLEVEL = logging.WARN,
                               SCREENS = options.SCREENS,
                               PLUGIN_DIR = options.PLUGIN_DIR)
     return config

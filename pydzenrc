@@ -45,3 +45,6 @@ ICON_PATH = '/home/fire/.xmonad/icons'
 
 DZEN = 'dzen2'
 GDBAR = 'gdbar'
+
+import logging
+LOGLEVEL = logging.WARN
