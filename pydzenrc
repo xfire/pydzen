@@ -12,7 +12,8 @@ PLUGINS = ('plugins.mpd',
            'plugins.timer',
           )
 
-FONT = '-artwiz-snap-*-*-*-*-*-100-*-*-*-*-*-*'
+# FONT = '-artwiz-snap-*-*-*-*-*-100-*-*-*-*-*-*'
+FONT = '-*-fixed-*-*-*-*-*-*-*-*-*-*-*-*'
 
 FG_COLOR = '#b6b4b8'                # default foreground color
 BG_COLOR = '#1c2636'                # default background color
