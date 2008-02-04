@@ -9,7 +9,7 @@ PLUGINS = ('plugins.mpd',
            'plugins.mem',
            'plugins.cpu',
            'plugins.battery',
-           'plugins.datetime',
+           'plugins.timer',
           )
 
 FONT = '-artwiz-snap-*-*-*-*-*-100-*-*-*-*-*-*'

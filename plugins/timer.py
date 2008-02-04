@@ -18,9 +18,28 @@
 # vim:syntax=python:sw=4:ts=4:expandtab
 
 import time
+import datetime
+import logging
 
 from pydzen import utils
 
+logger = logging.getLogger('plugin.cpu')
+
+def format_td(seconds):
+    td = datetime.timedelta(seconds = seconds)
+    sec = td.days * 24 * 60 * 60 + td.seconds 
+    min, sec = divmod(sec, 60) 
+    hrs, min = divmod(min, 60) 
+    return '%02d:%02d:%02d' % (hrs, min, sec) 
+
 @utils.cache(5)
 def update():
-    return '^fg()^bg()%s ' % time.strftime('%Y-%m-%d - %H:%M')
+    try:
+        uptime, idletime = [float(field) for field in open('/proc/uptime').read().split()]
+
+        return ['^fg()^bg()%s ' % time.strftime('%Y-%m-%d - %H:%M'),
+                '^fg()^bg()uptime: %s ' % format_td(uptime)]
+    except StandardError, e:
+        logger.warn(e)
+
+    return None
