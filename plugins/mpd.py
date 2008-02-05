@@ -19,6 +19,7 @@
 
 import os
 import logging
+import socket
 
 from pydzen import config, utils
 
@@ -54,6 +55,7 @@ def songstr(song):
         s = '..%s' % s[len(s) - SONG_MAX:]
     return s
 
+@utils.cache(2)
 def update():
     global mpd
         
@@ -74,7 +76,7 @@ def update():
                     progress = utils.gdbar('%s %s' % tuple(status['time'].split(':')))
                 return ['MPD: ^i(%s)%s' % (icon, progress),
                         'MPD: %s' % song]
-        except StandardError, e:
+        except (StandardError, socket.error), e:
             mpd = None  # try to reconnect if connection is lost
             logger.warn(e)
 
