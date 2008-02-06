@@ -322,7 +322,7 @@ if __name__ == '__main__':
                         if value:
                             lines[i].append(value)
 
-            lines = [config.JOINTS.join(l) for l in lines]
+            lines = [config.JOINTS.join(line) for line in lines if line]
             lines = '\n'.join(lines) + '\n'
             for d in dzens:
                 d.stdin.write(lines)
