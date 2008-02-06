@@ -58,7 +58,8 @@ def update():
             fg_color = config.FG_COLOR_URGENT
         elif percent < 50:
             fg_color = config.FG_COLOR_NOTICE
-        bat = utils.gdbar('%s %s' % (remain, lastfull))
+        bat = utils.gdbar('%s %s' % (remain, lastfull), 
+                          l = '%d%% ' % (100. / lastfull * remain))
 
         ac = ''
         if not ac_vals and rate > 0:

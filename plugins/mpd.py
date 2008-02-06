@@ -73,7 +73,8 @@ def update():
                 icon = dict(play = ICON_PLAY, pause = ICON_PAUSE, stop = ICON_STOP).get(status.state, '')
                 progress = ''
                 if 'time' in status:
-                    progress = utils.gdbar('%s %s' % tuple(status['time'].split(':')))
+                    cur, max = [float(i) for i in status['time'].split(':')]
+                    progress = utils.gdbar('%d %d' % (cur, max), l = '%d%% ' % (100. / max * cur))
                 return ['MPD: ^i(%s)%s' % (icon, progress),
                         'MPD: %s' % song]
         except (StandardError, socket.error), e:
