@@ -19,6 +19,11 @@ and the 'plugin/' directory into it.
 Finally customize your 'pydzenrc' and the plugins like mentioned in the next
 paragraph.
 
+the shipped plugins need a relative new version of dzen. you can get it from
+http://gotmor.googlepages.com/dzen.
+at the moment, pydzen is tested with revision 215 from the subversion 
+repository.
+
 
 Configuration
 =============
