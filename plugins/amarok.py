@@ -84,10 +84,10 @@ def update():
                 progress = ''
                 progress_detail = ''
                 if state['status'] != AMAROK_STOP:
-                    state['currentMin'] = state['currentTime'] / 60;
-                    state['currentSec'] = state['currentTime'] % 60;
-                    state['totalMin'] = state['totalTime'] / 60;
-                    state['totalSec'] = state['totalTime'] % 60;
+                    state['currentMin'] = state['currentTime'] / 60
+                    state['currentSec'] = state['currentTime'] % 60
+                    state['totalMin'] = state['totalTime'] / 60
+                    state['totalSec'] = state['totalTime'] % 60
                     state['song'] = song
 
                     progress = utils.gdbar('%(currentTime)d %(totalTime)d' % state,
