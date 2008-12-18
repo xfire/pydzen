@@ -29,7 +29,7 @@ ICON_TEMP = os.path.join(config.ICON_PATH, 'temp.xbm')
 
 logger = logging.getLogger('plugin.cpu')
 
-FILE_TEMP = '/proc/acpi/thermal_zone/TZ4/temperature'
+FILE_TEMP = '/proc/acpi/thermal_zone/THM0/temperature'
 
 RE_CPU = re.compile(r'^cpu MHz\s*:\s*(?P<mhz>\d+).*$')
 RE_STATS = re.compile(r'^cpu  (?P<user>\d+) (?P<system>\d+) (?P<nice>\d+) (?P<idle>\d+).*$')
@@ -37,7 +37,7 @@ RE_TEMP = re.compile(r'^temperature:\s*(?P<temp>\d+)\s+(?P<unit>.*)$')
 
 OLD_STATS = dict(user = 0, system = 0, nice = 0, idle = 0)
 
-
+@utils.cache(2)
 def update():
     try:
         cpu_vals = utils.parse_file('/proc/cpuinfo', RE_CPU)
