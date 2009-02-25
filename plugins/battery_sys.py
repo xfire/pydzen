@@ -61,7 +61,7 @@ def update():
 
         ac = ''
         if not ac_vals and rate > 0:
-            mins = (3600.0 * (remain / rate)) / 60.0
+            mins = (3600.0 * (float(remain) / float(rate))) / 60.0
             hours = math.floor(mins / 60.0)
             mins = math.floor(mins - (hours * 60.0))
             ac = ' %02d:%02d' % (hours, mins)
